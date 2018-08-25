@@ -34,16 +34,19 @@ def flip_switch(box_is_being_turned_on):
         flipped_state = re.sub(r'(?<=BOX_IS_ON = )\w+', str(box_is_being_turned_on), contents)
         toggle(box, flipped_state)
 
-    message = "The box is {}".format('on' if box_is_being_turned_on else 'off')
+    message = 'The box is {}'.format('on' if box_is_being_turned_on else 'off')
     print(message)
 
     next_action = TURN_BOX_OFF if box_is_being_turned_on else LET_BOX_JUST_SIT_THERE_DOING_WHAT_IT_IS_DOING
-    subprocess.call([sys.executable, __file__, next_action])
+    act(next_action)
 
 def toggle(switchable, new_state):
     switchable.seek(0)
     switchable.write(new_state)
     switchable.truncate()
+
+def act(action):
+    subprocess.call([sys.executable, __file__, action])
 
 if __name__ == '__main__':
     args = sys.argv
@@ -55,4 +58,4 @@ if __name__ == '__main__':
             turn_box_off()
 
     if BOX_IS_ON:
-        subprocess.call([sys.executable, __file__, LET_BOX_JUST_SIT_THERE_DOING_WHAT_IT_IS_DOING])
+        act(LET_BOX_JUST_SIT_THERE_DOING_WHAT_IT_IS_DOING)
